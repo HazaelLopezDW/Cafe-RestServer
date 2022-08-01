@@ -1,12 +1,19 @@
 const { response } = require("express");
 
 const usuariosGet = (req, res = response) => {
-  res.json({
-    msg: "Peticion Get - Controllers",
-  });
+
+    const { q, nombre = 'No Name', page = 1, limit = 10 } = req.query;
+
+    res.json({
+        msg: "Peticion Get - Controllers",
+        q,
+        nombre,
+        page,
+        limit
+    });
 };
 
-const usuariosPost = (req, res) => {
+const usuariosPost = (req, res = response) => {
 
     const {nombre, edad} = req.body;
 
@@ -18,15 +25,23 @@ const usuariosPost = (req, res) => {
 };
 
 const usuariosPut = (req, res) => {
-  res.json({
-    msg: "Peticion Put - Controllers",
-  });
+
+    const { id } = req.params;
+
+    res.json({
+        msg: "Peticion Put - Controllers",
+        id
+    });
 };
 
 const usuariosDelete = (req, res) => {
-  res.json({
-    msg: "Peticion Delete - Controllers",
-  });
+
+    const { id } = req.params;
+
+    res.json({
+        msg: "Peticion Delete - Controllers",
+        id
+    });
 };
 
 const usuariosPatch = (req, res) => {
