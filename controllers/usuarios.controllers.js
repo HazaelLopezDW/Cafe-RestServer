@@ -12,10 +12,7 @@ const usuariosGet = async (req, res = response) => {
         Usuario.find(query).skip(Number(desde)) .limit(Number(limite))
     ]);
 
-    res.json({
-        total,
-        usuarios
-    });
+    res.json({ total, usuarios });
 };
 
 const usuariosPost = async (req, res = response) => {
@@ -52,14 +49,13 @@ const usuariosPut = async (req, res) => {
     res.json(usuario);
 };
 
-const usuariosDelete = (req, res) => {
+const usuariosDelete = async (req, res) => {
 
     const { id } = req.params;
+    // Borramos fisicamente
+    const usuario = await Usuario.findByIdAndDelete(id);
 
-    res.json({
-        msg: "Peticion Delete - Controllers",
-        id
-    });
+    res.json(usuario);
 };
 
 const usuariosPatch = (req, res) => {
