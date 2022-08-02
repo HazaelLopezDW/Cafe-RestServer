@@ -1,14 +1,49 @@
+const bcryptjs = require("bcryptjs");
 const { response } = require("express");
+const Usuario = require('../models/usuario');
 
-const login = (req, res = response ) => {
+const login = async (req, res = response ) => {
 
     const { correo, password } = req.body;
 
-    res.json({
-        msg: 'Login Ok',
-        correo,
-        password
-    });
+    try {
+
+        // Verificar si el correo existe 
+        const usuario  = await Usuario.findOne({ correo });
+        if(!usuario){
+            return res.status(400).json({
+                msg: `Usuario / Password no son correctos - C`
+            });
+        }
+
+        // Verificar si el usuario esta activo 
+        if(!usuario.estado){
+            return res.status(400).json({
+                msg: `Usuario / Password no son correctos - estado: false`
+            });
+        }
+
+        // Verificar la contraseña 
+        const validPassword = bcryptjs.compareSync(password, usuario.password);
+        if(!validPassword){
+            return res.status(400).json({
+                msg: `Usuario / Password no son correctos - P`
+            });
+        }
+
+        // Generar el JWT
+
+        res.json({
+            correo,
+            password
+        });
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            msg: `Hable con el administrador`
+        });
+    }
 }
 
 module.exports = {
