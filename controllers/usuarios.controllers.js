@@ -32,13 +32,23 @@ const usuariosPost = async (req, res = response) => {
     });
 };
 
-const usuariosPut = (req, res) => {
+const usuariosPut = async (req, res) => {
 
     const { id } = req.params;
+    const { password, google, correo, ...resto } = req.body;
+
+    // TODO: validar contra DB
+    if(password){
+         // Encriptar la contraseña
+        const salt = bcryptjs.genSaltSync(11);
+        resto.password = bcryptjs.hashSync(password, salt);
+    }
+
+    const usuario = await Usuario.findByIdAndUpdate(id, resto);
 
     res.json({
         msg: "Peticion Put - Controllers",
-        id
+        usuario
     });
 };
 
