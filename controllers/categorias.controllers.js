@@ -1,13 +1,14 @@
 const { response } = require('express');
 const { Categoria } = require('../models');
 
-(req, res = response) => {
+// ObtenerCategorias - paginado - Total - Populate
+const obtenerCategorias = (req, res = response) => {
     res.status(200).json({
         msg: 'Categorias get'
     });
 }
 
-(req, res = response) => {
+const obtenerCategoria = (req, res = response) => {
     res.status(200).json({
         msg: 'Categorias get id'
     });
@@ -37,18 +38,23 @@ const crearCategoria = async (req, res = response) => {
     res.status(201).json(categoria);
 }
 
-(req, res = response) => {
+const actualizarCategoria = (req, res = response) => {
     res.status(200).json({
         msg: 'Categorias put id'
     });
 }
 
-(req, res = response) => {
+const borrarCategoria = (req, res = response) => {
     res.status(200).json({
         msg: 'Categorias delete id'
     });
 }
 
 module.exports = {
-    crearCategoria
+    actualizarCategoria,
+    borrarCategoria,
+    crearCategoria,
+    obtenerCategoria,
+    obtenerCategorias
+
 }

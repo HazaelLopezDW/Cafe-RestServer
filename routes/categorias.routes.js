@@ -10,7 +10,13 @@ const router = Router();
 router.get('/', );
 
 // Obtener Categoria por Id -Servicio público
-router.get('/:id', );
+router.get(
+    '/:id',
+    [
+     check('id').custom(existeCategoria),
+     validarCampos
+    ],
+);
 
 // Crear una categoria - Servicio privado jwt
 router.post(
