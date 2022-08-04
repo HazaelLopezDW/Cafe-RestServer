@@ -35,9 +35,9 @@ const ProductoSchema = Schema({
 });
 
 ProductoSchema.methods.toJSON = function() {
-    const { __v, estado, _id, ...category } = this.toObject();
-    category.uid = _id;
-    return category;
+    const { __v, estado, _id, ...data } = this.toObject();
+    data.uid = _id;
+    return data;
 }
 
 module.exports = model('Producto', ProductoSchema);
