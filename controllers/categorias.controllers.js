@@ -2,16 +2,25 @@ const { response } = require('express');
 const { Categoria } = require('../models');
 
 // ObtenerCategorias - paginado - Total - Populate
-const obtenerCategorias = (req, res = response) => {
-    res.status(200).json({
-        msg: 'Categorias get'
-    });
+const obtenerCategorias = async (req, res = response) => {
+
+    const { limite = 5, desde = 0 } = req.query;
+    const query = { estado: true }
+
+    const [total, categorias] = await Promise.all([
+        Categoria.countDocuments(query),
+        Categoria.find(query).skip(Number(desde)).limit(Number(limite)).populate('nombre')
+    ]);
+
+    res.status(200).json({total, categorias});
 }
 
-const obtenerCategoria = (req, res = response) => {
-    res.status(200).json({
-        msg: 'Categorias get id'
-    });
+const obtenerCategoria = async (req, res = response) => {
+
+    const { id } = req.params;
+    const categoria = await Categoria.findById(id);
+
+    res.status(200).json(categoria);
 }
 
 const crearCategoria = async (req, res = response) => {
@@ -38,16 +47,29 @@ const crearCategoria = async (req, res = response) => {
     res.status(201).json(categoria);
 }
 
-const actualizarCategoria = (req, res = response) => {
-    res.status(200).json({
-        msg: 'Categorias put id'
-    });
+const actualizarCategoria = async (req, res = response) => {
+
+    const { id } = req.params;
+    let nombre  = req.body?.nombre;
+
+    if(!nombre){
+        return res.status(500).json({
+            msg: `Error nombre undefined`
+        });
+    }
+    
+    nombre = nombre.toUpperCase();
+    const categoria  = await Categoria.findByIdAndUpdate(id, {nombre});
+
+    res.status(200).json(categoria);
 }
 
-const borrarCategoria = (req, res = response) => {
-    res.status(200).json({
-        msg: 'Categorias delete id'
-    });
+const borrarCategoria = async (req, res = response) => {
+
+    const { id } = req.params;
+    const categoria = await Categoria.findByIdAndUpdate(id, {estado: false}, {rawResult: true});
+
+    res.status(200).json(categoria);
 }
 
 module.exports = {
