@@ -52,16 +52,18 @@ const crearCategoria = async (req, res = response) => {
 const actualizarCategoria = async (req, res = response) => {
 
     const { id } = req.params;
-    let nombre  = req.body?.nombre;
+    const {estado, usuario, ...data}  = req.body;
 
-    if(!nombre){
+    if(!data.nombre){
         return res.status(500).json({
             msg: `Error nombre undefined`
         });
     }
     
-    nombre = nombre.toUpperCase();
-    const categoria  = await Categoria.findByIdAndUpdate(id, {nombre});
+    data.nombre = data.nombre.toUpperCase();
+    data.usuario = req.usuario._id;
+
+    const categoria  = await Categoria.findByIdAndUpdate(id, data, {new: true});
 
     res.status(200).json(categoria);
 }
@@ -69,7 +71,8 @@ const actualizarCategoria = async (req, res = response) => {
 const borrarCategoria = async (req, res = response) => {
 
     const { id } = req.params;
-    const categoria = await Categoria.findByIdAndUpdate(id, {estado: false}, {rawResult: true});
+    const categoria = await Categoria.findByIdAndUpdate(id, {estado: false}, {new: true})
+                                     .populate('usuario','nombre');
 
     res.status(200).json(categoria);
 }
