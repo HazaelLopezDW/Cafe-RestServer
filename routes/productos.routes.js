@@ -1,0 +1,69 @@
+const { Router } = require('express');
+const { check } = require('express-validator');
+const { validarCampos, 
+        validarJWT, 
+        tieneRole } = require('../middlewares');
+const { existeCategoriaPorId, 
+        existeProductoPorId } = require('../helpers/db-validators');
+const { actualizarProducto,
+        borrarProducto,
+        crearProducto,
+        obtenerProducto,
+        obtenerProductos } = require('../controllers/productos.controllers');;
+
+const router = Router();
+
+// Obtener todas la categorias - Servicio público
+router.get('/', obtenerProductos);
+
+// Obtener Categoria por Id -Servicio público
+router.get(
+    '/:id',
+    [
+      check('id','No es un ID de mongo válido').isMongoId(),
+      check('id').custom(existeProductoPorId),
+      validarCampos
+    ],
+    obtenerProducto
+);
+
+// Crear una categoria - Servicio privado jwt
+router.post(
+    '/', 
+    [
+      validarJWT,
+      check('nombre','El nombre es oblicatorio').not().isEmpty(),
+      check('categoria','No es un ID de mongo').isMongoId(),
+      check('categoria').custom(existeCategoriaPorId),
+      validarCampos
+    ], 
+    crearProducto
+);
+
+// Actualizar un registro por Id -Servicio Privado jwt
+router.put(
+    '/:id', 
+    [
+      validarJWT,
+      tieneRole('ADMIN_ROLE', 'VENTAS_ROLE'),
+      check('id','No es un ID de mongo').isMongoId(),
+      check('id').custom(existeProductoPorId),
+      validarCampos
+    ],
+    actualizarProducto
+);
+
+// Borrar una categoria - Servicio privado 
+router.delete(
+    '/:id', 
+    [
+      validarJWT,
+      tieneRole('ADMIN_ROLE', 'VENTAS_ROLE'),
+      check('id','No es un ID de mongo').isMongoId(),
+      check('id').custom(existeProductoPorId),
+      validarCampos
+    ],
+    borrarProducto
+);
+
+module.exports = router;
