@@ -2,9 +2,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 const { validarCampos, validarJWT, tieneRole } = require('../middlewares');
 const { existeCategoriaPorId } = require('../helpers/db-validators');
-
-const { 
-        actualizarCategoria, 
+const { actualizarCategoria, 
         borrarCategoria,
         crearCategoria, 
         obtenerCategoria,  
@@ -19,7 +17,7 @@ router.get('/', obtenerCategorias);
 router.get(
     '/:id',
     [
-      check('id','No es un ID de mongo').isMongoId(),
+      check('id','No es un ID de mongo válido').isMongoId(),
       check('id').custom(existeCategoriaPorId),
       validarCampos
     ],
