@@ -1,9 +1,9 @@
 const { response } = require("express");
 const { ObjectId } = require('mongoose').Types;
-const { Usuario } = require('../models')
+const { Usuario, Categoria, Producto } = require('../models')
 
 const coleccionesPermitidas= [
-    'categoria',
+    'categorias',
     'productos',
     'usuarios',
     'roles'
@@ -38,6 +38,54 @@ const buscarUsuarios = async (termino = '', res = response) => {
     });
 }
 
+const buscarCategorias = async (termino = '', res = response) => {
+    const esMongoID = ObjectId.isValid(termino); // True
+
+    if(esMongoID) {
+        const categoria = await Categoria.findById(termino);
+        return res.json({
+            results: (categoria) ? [categoria] : []
+        });
+    }
+
+    // Expresión regular
+    const regex = new RegExp(termino, 'i')
+
+    const categoria = await Categoria.find({ nombre: regex, estado: true});
+
+    const total = await Categoria.count({ nombre: regex, estado: true});
+ 
+    res.json({
+        total,
+        results: categoria
+    });
+}
+
+const buscarProductos = async (termino = '', res = response) => {
+    const esMongoID = ObjectId.isValid(termino); // True
+
+    if(esMongoID) {
+        const producto = await (await Producto.findById(termino))
+                                              .populate('categoria','nombre');
+        return res.json({
+            results: (producto) ? [producto] : []
+        });
+    }
+
+    // Expresión regular
+    const regex = new RegExp(termino, 'i')
+
+    const producto = await Producto.find({ nombre: regex, estado: true})
+                                   .populate('categoria','nombre');
+
+    const total = await Producto.count({ nombre: regex, estado: true});
+ 
+    res.json({
+        total,
+        results: producto
+    });
+}
+
 
 const buscar = (req, res = response) => {
 
@@ -50,12 +98,12 @@ const buscar = (req, res = response) => {
     }
 
     switch (coleccion) {
-        case 'categoria':
-            
+        case 'categorias':
+            buscarCategorias(termino, res);
             break;
 
         case 'productos':
-
+            buscarProductos(termino, res);
             break;
 
         case 'usuarios':
