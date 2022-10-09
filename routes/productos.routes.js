@@ -9,7 +9,7 @@ const { actualizarProducto,
         borrarProducto,
         crearProducto,
         obtenerProducto,
-        obtenerProductos } = require('../controllers/productos.controllers');;
+        obtenerProductos } = require('../controllers');;
 
 const router = Router();
 

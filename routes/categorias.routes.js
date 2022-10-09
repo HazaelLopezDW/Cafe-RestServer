@@ -6,7 +6,7 @@ const { actualizarCategoria,
         borrarCategoria,
         crearCategoria, 
         obtenerCategoria,  
-        obtenerCategorias } = require('../controllers/categorias.controllers');
+        obtenerCategorias } = require('../controllers');
 
 const router = Router();
 

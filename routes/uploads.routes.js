@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 const { cargarArchivo, 
         actualizarImagen, 
         mostrarImagen, 
-        actualizarImagenCloudinary} = require('../controllers/uploads.controllers');
+        actualizarImagenCloudinary} = require('../controllers');
 const { coleccionesPermitidas } = require('../helpers');
 const { validarArchivoSubir, 
         validarCampos } = require('../middlewares');
