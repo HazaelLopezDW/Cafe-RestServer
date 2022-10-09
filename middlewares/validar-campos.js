@@ -16,8 +16,8 @@ const validarPasswordCorreo = (req, res = response, next) => {
     let { email, password } = req.body
 
     // Limpieza nuestros campos
-    email = email.trim();
-    password = password.trim();
+    email = email.trim();        // Creo que deberia pasar por el toLowerCase()
+    password = password.trim(); // Creo que deberia pasar por el toLowerCase()
 
     if(email === password) {
         return res.status(400).json({
@@ -32,6 +32,8 @@ const validarPasswordCorreo = (req, res = response, next) => {
             msg: `Evita usar "correo, password, o 1-6" como tu password`
         });
     }
+
+    next();
 }
 
 module.exports = {
