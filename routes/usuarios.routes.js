@@ -3,7 +3,8 @@ const { check } = require('express-validator');
 const {
         validarCampos, 
         validarJWT, 
-        tieneRole} = require('../middlewares');
+        tieneRole,
+        validarPasswordCorreo} = require('../middlewares');
 const { 
         esRolValido, 
         emailExiste, 
@@ -27,7 +28,8 @@ router.post('/',
           check('correo').custom(emailExiste),
         //check('rol', 'No es un rol permitido').isIn(['ADMIN_ROLE','USER_ROLE']),
           check('rol').custom(esRolValido),
-          validarCampos
+          validarCampos,
+          validarPasswordCorreo
         ],
         usuariosPost
 );
